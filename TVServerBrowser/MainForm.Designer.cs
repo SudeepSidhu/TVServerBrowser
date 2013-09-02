@@ -43,6 +43,7 @@
             this.btnFindGame = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnAbout = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -174,11 +175,22 @@
             this.btnAbout.UseVisualStyleBackColor = true;
             this.btnAbout.Click += new System.EventHandler(this.btnAbout_Click);
             // 
-            // Form1
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(168, 248);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(113, 37);
+            this.button1.TabIndex = 9;
+            this.button1.Text = "Save to profiles";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(831, 300);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.btnAbout);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnJoin);
@@ -186,7 +198,7 @@
             this.Controls.Add(this.btnSearch);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MaximizeBox = false;
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "TV Server Browser";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -213,6 +225,7 @@
         private System.Windows.Forms.Button btnFindGame;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button btnAbout;
+        private System.Windows.Forms.Button button1;
     }
 }
 
