@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Permissions;
 using System.Text;
 
 namespace TVServerBrowser
 {
     public static class FireStuff
     {
+        public const string HostsFilePath = @"C:\windows\system32\drivers\etc\hosts";
+
         public static void SaveToProfiles(FileInfo exePath)
         {
             List<FileInfo> profiles = new List<FileInfo>();
@@ -49,6 +52,26 @@ namespace TVServerBrowser
                     writer.WriteLine("serverFavorites=(IP=\"{0}\",Port=\"{1}\")", ip, port);
                 }
                 writer.Close();
+            }
+        }
+
+        public static bool HostsOK()
+        {
+            var hostsfileok = false;
+            foreach (string str in File.ReadAllLines(HostsFilePath))
+            {
+                if (str == "127.0.0.1 tribesv.available.gamespy.com")
+                    hostsfileok = true;
+            }
+            return hostsfileok;
+        }
+
+        [PrincipalPermission(SecurityAction.Demand, Role = @"BUILTIN\Administrators")]
+        public static void AddToHosts()
+        {
+            if (!HostsOK())
+            {
+                File.AppendAllText(HostsFilePath, Environment.NewLine + "127.0.0.1 tribesv.available.gamespy.com" + Environment.NewLine);
             }
         }
     }

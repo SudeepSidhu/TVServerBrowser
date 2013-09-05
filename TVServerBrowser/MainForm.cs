@@ -356,6 +356,11 @@ namespace TVServerBrowser
             }
             try
             {
+                if (!FireStuff.HostsOK())
+                {
+                    MessageBox.Show("Your hosts file does not seem to contain redirection to localhost.\nSaving to profiles needs this feature. Please run this application as administrator and it will automagically add redirection to localhost.");
+                    FireStuff.AddToHosts();
+                }
                 FireStuff.SaveToProfiles(new FileInfo(Properties.Settings.Default.gamePath));
             }
 #if !DEBUG
