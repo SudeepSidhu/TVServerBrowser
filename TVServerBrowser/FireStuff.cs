@@ -42,13 +42,10 @@ namespace TVServerBrowser
                 {
                     writer.WriteLine(str6);
                 }
-                foreach (var server in MainForm.Servers.Distinct())
+                foreach (TVServer server in MainForm.tvServers)
                 {
-                    IPAddress addr;
-                    if (!IPAddress.TryParse(server, out addr)) continue;
-                    var splat = addr.ToString().Split(':');
-                    string ip = splat[0];
-                    string port = splat.Length == 2 ? splat[1] : 7777.ToString();
+                    string ip = server.ipAddress;
+                    string port = server.port;
                     writer.WriteLine("serverFavorites=(IP=\"{0}\",Port=\"{1}\")", ip, port);
                 }
                 writer.Close();

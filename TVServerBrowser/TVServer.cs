@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TVServerBrowser
 {
-    class TVServer
+    public class TVServer
     {
         public String mapName { get; private set; }
         public String gameType { get; private set; }

@@ -12,6 +12,7 @@ using System.Collections;
 using System.Diagnostics;
 using System.Linq;
 using System.IO;
+using System.Net.NetworkInformation;
 
 namespace TVServerBrowser
 {
@@ -24,8 +25,8 @@ namespace TVServerBrowser
 
         private Thread serverLoader;
 
-        public static List<string> Servers = new List<string>();
-
+        public static List<Server> servers = new List<Server>();
+        public static List<TVServer> tvServers = new List<TVServer>();
 
         public MainForm()
         {
@@ -40,7 +41,6 @@ namespace TVServerBrowser
         private void btnSearch_Click(object sender, EventArgs e)
         {
             Search();
-
         }
 
         public void Search()
@@ -51,58 +51,40 @@ namespace TVServerBrowser
             if (nServers != null && nServers.Length > 0)
             {
                 serverLoader = new Thread(loadServers);
-                Servers.Clear();
-                Servers.AddRange(nServers);
+                servers.Clear();
+                servers.AddRange(nServers);
                 serverLoader.Start();
             }
 
             btnSearch.Enabled = true;
         }
 
-        private String[] getMasterServerList()
+        private Server[] getMasterServerList()
         {
+            List<Server> list = new List<Server>();
+            
+            WebClient client = new WebClient();
+            String result = client.DownloadString("http://pastebin.com/raw.php?i=2EENrPgG");
 
-            Stream stream = null;
-            ASCIIEncoding asen = new ASCIIEncoding();
+            String[] textInfo = result.Split('\n');
 
-            try
-            {
-                selfTCPSocket = new TcpClient(new IPEndPoint(IPAddress.Any, 0));
-                selfTCPSocket.Connect("tribesv.tribesavl.tribesv.org", 27900);
+            foreach (String str in textInfo){
 
-                stream = selfTCPSocket.GetStream();
+                String[] addressAndPort = str.Split(':');
+                IPAddress address;
+                int port;
 
-                byte[] toSend = asen.GetBytes("serversPlz");
-                byte[] info = new byte[128];
-
-                stream.Write(toSend, 0, toSend.Length);
-                stream.Read(info, 0, 128);
-
-                String strServer = asen.GetString(info);
-                strServer = strServer.Replace("\0", "");
-                Console.WriteLine("Servers:'" + strServer + "'");
-
-                stream.Close();
-                selfTCPSocket.Close();
-
-                return strServer.Split('|');
-            }
-            catch (Exception e)
-            {
-
-                if (stream != null)
+                if (addressAndPort.Length == 2 && IPAddress.TryParse(addressAndPort[0],out address) && int.TryParse(addressAndPort[1],out port))
                 {
-                    stream.Close();
+                    Server s = new Server();
+                    s.address = address;
+                    s.port = port;
+                    
+                    list.Add(s);
                 }
-
-                if (selfTCPSocket != null)
-                {
-                    selfTCPSocket.Close();
-                }
-
-                MessageBoxEx.Show(this, "An error occured while communicating with the master server. Please try again.\r\n\r\n" + e.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
             }
+
+            return list.ToArray();
         }
 
         private void loadServers()
@@ -113,14 +95,11 @@ namespace TVServerBrowser
                 {
                     btnSearch.Invoke((MethodInvoker)delegate { btnSearch.Enabled = false; });
                     lstServers.Invoke((MethodInvoker)delegate { lstServers.Items.Clear(); });
+                    tvServers.Clear();
 
-
-                    foreach (String server in Servers)
+                    foreach (Server server in servers)
                     {
-                        if (server.Trim().Length > 0)
-                        {
-                            getServerInfo(selfUDPSocket, IPAddress.Parse(server));
-                        }
+                        getServerInfo(selfUDPSocket, server.address, server.port);
                     }
 
                     btnSearch.Invoke((MethodInvoker)delegate { btnSearch.Enabled = true; });
@@ -145,11 +124,11 @@ namespace TVServerBrowser
             }
         }
 
-        private void getServerInfo(UdpClient socket, IPAddress address)
+        private void getServerInfo(UdpClient socket, IPAddress address, int port)
         {
             String strAddress = String.Copy(address.ToString());
 
-            IPEndPoint endPoint = new IPEndPoint(address, 7778);
+            IPEndPoint endPoint = new IPEndPoint(address, port);
             byte[] send_buffer = new byte[] { 0x5c, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x5c, 0x00 }; // "\status\."
 
             try
@@ -165,13 +144,37 @@ namespace TVServerBrowser
 
                 if (server.isValid())
                 {
+                    tvServers.Add(server);
 
-                    ListViewItem newItem = new ListViewItem(new String[] { server.serverName, server.mapName, server.gameType, server.numPlayers + "/" + server.maxPlayers, server.ipAddress + ":" + server.port, server.password, server.adminEmail });
-                    newItem.Tag = server;
-                    lstServers.Invoke((MethodInvoker)delegate { lstServers.Items.Add(newItem); });
+                    Ping pingSender = new Ping();
+
+                    string data = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+                    byte[] buffer = Encoding.ASCII.GetBytes(data);
+                    int timeout = 2000;
+                    PingOptions options = new PingOptions(64, false);
+
+                    PingReply reply = pingSender.Send(server.ipAddress, timeout, buffer, options);
+
+                    if (reply.Status == IPStatus.Success)
+                    {
+                        addToList(server, reply.RoundtripTime.ToString());
+                    }
+                    else
+                    {
+                        addToList(server, "N/A");
+                    }
+
+
                 }
             }
             catch { }
+        }
+
+        private void addToList (TVServer server, String ping){
+
+            ListViewItem newItem = new ListViewItem(new String[] { server.serverName, ping, server.mapName, server.gameType, server.numPlayers + "/" + server.maxPlayers, server.ipAddress + ":" + server.port, server.password, server.adminEmail });
+            newItem.Tag = server;
+            lstServers.Invoke((MethodInvoker)delegate { lstServers.Items.Add(newItem); });
         }
 
         static string get32BitProgramFilesDir()

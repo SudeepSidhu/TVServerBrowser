@@ -28,8 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.btnSearch = new System.Windows.Forms.Button();
             this.lstServers = new System.Windows.Forms.ListView();
+            this.columnHeader0 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -49,7 +51,7 @@
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(287, 248);
+            this.btnSearch.Location = new System.Drawing.Point(302, 251);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(125, 37);
             this.btnSearch.TabIndex = 0;
@@ -60,6 +62,7 @@
             // lstServers
             // 
             this.lstServers.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader0,
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3,
@@ -72,16 +75,20 @@
             this.lstServers.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lstServers.Location = new System.Drawing.Point(12, 12);
             this.lstServers.Name = "lstServers";
-            this.lstServers.Size = new System.Drawing.Size(807, 219);
+            this.lstServers.Size = new System.Drawing.Size(896, 219);
             this.lstServers.TabIndex = 1;
             this.lstServers.UseCompatibleStateImageBehavior = false;
             this.lstServers.View = System.Windows.Forms.View.Details;
             this.lstServers.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lstServers_MouseDoubleClick);
             // 
+            // columnHeader0
+            // 
+            this.columnHeader0.Text = "Server name";
+            this.columnHeader0.Width = 225;
+            // 
             // columnHeader1
             // 
-            this.columnHeader1.Text = "Server name";
-            this.columnHeader1.Width = 200;
+            this.columnHeader1.Text = "Ping";
             // 
             // columnHeader2
             // 
@@ -108,12 +115,12 @@
             // columnHeader7
             // 
             this.columnHeader7.Text = "Admin Email";
-            this.columnHeader7.Width = 120;
+            this.columnHeader7.Width = 150;
             // 
             // btnJoin
             // 
             this.btnJoin.Enabled = false;
-            this.btnJoin.Location = new System.Drawing.Point(418, 248);
+            this.btnJoin.Location = new System.Drawing.Point(433, 251);
             this.btnJoin.Name = "btnJoin";
             this.btnJoin.Size = new System.Drawing.Size(125, 37);
             this.btnJoin.TabIndex = 2;
@@ -158,7 +165,7 @@
             this.groupBox1.Controls.Add(this.btnFindGame);
             this.groupBox1.Controls.Add(this.chkWindowed);
             this.groupBox1.Controls.Add(this.chkConsole);
-            this.groupBox1.Location = new System.Drawing.Point(574, 237);
+            this.groupBox1.Location = new System.Drawing.Point(663, 237);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(245, 57);
             this.groupBox1.TabIndex = 7;
@@ -167,7 +174,7 @@
             // 
             // btnAbout
             // 
-            this.btnAbout.Location = new System.Drawing.Point(12, 248);
+            this.btnAbout.Location = new System.Drawing.Point(12, 252);
             this.btnAbout.Name = "btnAbout";
             this.btnAbout.Size = new System.Drawing.Size(56, 37);
             this.btnAbout.TabIndex = 8;
@@ -177,7 +184,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(168, 248);
+            this.button1.Location = new System.Drawing.Point(183, 251);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(113, 37);
             this.button1.TabIndex = 9;
@@ -189,7 +196,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(831, 300);
+            this.ClientSize = new System.Drawing.Size(920, 300);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btnAbout);
             this.Controls.Add(this.groupBox1);
@@ -197,6 +204,7 @@
             this.Controls.Add(this.lstServers);
             this.Controls.Add(this.btnSearch);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -212,7 +220,7 @@
 
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.ListView lstServers;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader0;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
@@ -226,6 +234,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button btnAbout;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
     }
 }
 
